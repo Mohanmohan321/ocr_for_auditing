@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+vendor_db.json
+.claude/
+*.tmp
+*.log
+.paddleocr/
+.paddlex/
