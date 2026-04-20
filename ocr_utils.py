@@ -11,10 +11,25 @@ import unicodedata
 log = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
-# Unicode ranges
+# Unicode ranges for all supported Indic scripts
 # ---------------------------------------------------------------------------
-TAMIL_RANGE = re.compile(r"[\u0B80-\u0BFF]")
-DEVANAGARI_RANGE = re.compile(r"[\u0900-\u097F]")
+SCRIPT_RANGES = {
+    "Hindi":     re.compile(r"[\u0900-\u097F]"),   # Devanagari
+    "Tamil":     re.compile(r"[\u0B80-\u0BFF]"),
+    "Telugu":    re.compile(r"[\u0C00-\u0C7F]"),
+    "Kannada":   re.compile(r"[\u0C80-\u0CFF]"),
+    "Malayalam": re.compile(r"[\u0D00-\u0D7F]"),
+    "Bengali":   re.compile(r"[\u0980-\u09FF]"),
+    "Gujarati":  re.compile(r"[\u0A80-\u0AFF]"),
+    "Punjabi":   re.compile(r"[\u0A00-\u0A7F]"),   # Gurmukhi
+    "Odia":      re.compile(r"[\u0B00-\u0B7F]"),
+    "Urdu":      re.compile(r"[\u0600-\u06FF]"),    # Arabic script
+    "Assamese":  re.compile(r"[\u0980-\u09FF]"),    # shares Bengali range
+    "Nepali":    re.compile(r"[\u0900-\u097F]"),    # shares Devanagari
+}
+
+TAMIL_RANGE = SCRIPT_RANGES["Tamil"]
+DEVANAGARI_RANGE = SCRIPT_RANGES["Hindi"]
 NON_LATIN = re.compile(
     r"[\u0900-\u097F\u0980-\u09FF\u0A00-\u0A7F\u0A80-\u0AFF"
     r"\u0B00-\u0B7F\u0B80-\u0BFF\u0C00-\u0C7F\u0C80-\u0CFF"
@@ -128,17 +143,20 @@ def normalize_ocr_text(raw_lines: list[str]) -> list[str]:
 
 def detect_languages(text: str) -> list[str]:
     """
-    Detect languages using Unicode character ranges.
-    Tamil: U+0B80–U+0BFF
-    English: A-Z / a-z
+    Auto-detect all languages present in text using Unicode script ranges.
+    Checks all supported Indic scripts plus English.
     """
     detected = []
 
-    if TAMIL_RANGE.search(text):
-        detected.append("Tamil")
+    for lang_name, pattern in SCRIPT_RANGES.items():
+        if pattern.search(text) and lang_name not in detected:
+            detected.append(lang_name)
 
-    if DEVANAGARI_RANGE.search(text):
-        detected.append("Hindi")
+    # Deduplicate shared ranges: Assamese/Bengali, Nepali/Hindi
+    if "Assamese" in detected and "Bengali" in detected:
+        detected.remove("Assamese")
+    if "Nepali" in detected and "Hindi" in detected:
+        detected.remove("Nepali")
 
     latin_count = sum(1 for c in text if c.isascii() and c.isalpha())
     if latin_count > 0:
@@ -161,8 +179,9 @@ def has_non_latin(text: str) -> bool:
 
 def translate_to_english(lines: list[str]) -> tuple[list[str], list[str]]:
     """
-    Step 3: If Tamil (or other non-Latin) detected, translate to English.
-    Uses deep-translator (GoogleTranslator) — same lib the pipeline already uses.
+    Auto-translate any non-Latin text to English.
+    Uses deep-translator with source='auto' so it works for ALL languages
+    (Tamil, Hindi, Telugu, Kannada, Malayalam, Bengali, Gujarati, Urdu, etc.)
 
     Returns:
         (original_lines, translated_lines)
@@ -174,7 +193,10 @@ def translate_to_english(lines: list[str]) -> tuple[list[str], list[str]]:
         log.info("All text is Latin/English — skipping translation")
         return lines, lines
 
-    log.info("Non-Latin text detected — translating to English")
+    detected = detect_languages("\n".join(lines))
+    non_english = [l for l in detected if l != "English" and l != "Unknown"]
+    log.info("Non-Latin text detected (%s) — auto-translating to English",
+             ", ".join(non_english) if non_english else "unknown script")
 
     try:
         from deep_translator import GoogleTranslator

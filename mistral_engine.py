@@ -1,8 +1,9 @@
 """
 Mistral AI Engine: Send raw OCR text to Mistral, get structured bill JSON back.
 
-Mistral understands noisy OCR, mixed Tamil+English, and returns clean parsed output.
-This replaces regex-based parsing as the primary extraction method.
+Mistral understands noisy OCR in any language (all Indian languages + English)
+and returns clean parsed output. This replaces regex-based parsing as the primary
+extraction method.
 """
 import json
 import logging
@@ -14,7 +15,7 @@ log = logging.getLogger(__name__)
 MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions"
 MISTRAL_MODEL = "mistral-small-latest"
 
-SYSTEM_PROMPT = """You are a bill/invoice data extraction AI. You receive raw OCR text from scanned bills (which may be noisy, mixed Tamil+English, or have broken characters).
+SYSTEM_PROMPT = """You are a bill/invoice data extraction AI. You receive raw OCR text from scanned bills which may be in ANY language (Hindi, Tamil, Telugu, Kannada, Malayalam, Bengali, Gujarati, Punjabi, Odia, Urdu, English, or mixed). The text may be noisy with broken characters.
 
 Your job: extract structured data and return ONLY valid JSON — no markdown, no explanation, no code fences.
 
@@ -43,7 +44,8 @@ Rules:
 - Phone numbers are 10 digits starting with 6-9
 - Dates should be in DD/MM/YYYY format
 - Do NOT hallucinate — if unsure, return null
-- Tamil text: extract the meaning, don't transliterate
+- Non-English text: extract the meaning, translate field values to English where appropriate (vendor names can stay in original script)
+- Understand context in ANY Indian language — keywords like total, tax, bill exist in all scripts
 - Return ONLY the JSON object, nothing else"""
 
 

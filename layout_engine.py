@@ -23,50 +23,97 @@ log = logging.getLogger(__name__)
 
 KEYWORDS = {
     "vendor": {
-        "tamil": ["கடை", "ஹோட்டல்", "உணவகம்", "மெஸ்", "ஸ்டோர்", "மார்ட்"],
-        "english": ["hotel", "restaurant", "mess", "store", "mart", "shop",
-                     "cafe", "bakery", "sweets", "enterprises", "traders"],
+        "tamil":     ["கடை", "ஹோட்டல்", "உணவகம்", "மெஸ்", "ஸ்டோர்", "மார்ட்"],
+        "hindi":     ["दुकान", "होटल", "रेस्टोरेंट", "भंडार", "स्टोर", "मार्ट"],
+        "telugu":    ["దుకాణం", "హోటల్", "రెస్టారెంట్", "స్టోర్", "మార్ట్"],
+        "kannada":   ["ಅಂಗಡಿ", "ಹೋಟೆಲ್", "ರೆಸ್ಟೋರೆಂಟ್", "ಸ್ಟೋರ್", "ಮಾರ್ಟ್"],
+        "malayalam": ["കട", "ഹോട്ടൽ", "റെസ്റ്റോറന്റ്", "സ്റ്റോർ", "മാർട്ട്"],
+        "bengali":   ["দোকান", "হোটেল", "রেস্টুরেন্ট", "স্টোর", "মার্ট"],
+        "gujarati":  ["દુકાન", "હોટેલ", "રેસ્ટોરન્ટ", "સ્ટોર", "માર્ટ"],
+        "english":   ["hotel", "restaurant", "mess", "store", "mart", "shop",
+                      "cafe", "bakery", "sweets", "enterprises", "traders"],
     },
     "total": {
-        "tamil": ["மொத்தம்", "மொத்த தொகை", "செலுத்த வேண்டிய"],
-        "english": ["total", "grand total", "total amount", "net payable",
-                     "bill amount", "amount payable", "you pay"],
+        "tamil":     ["மொத்தம்", "மொத்த தொகை", "செலுத்த வேண்டிய"],
+        "hindi":     ["कुल", "कुल राशि", "कुल योग", "भुगतान योग्य"],
+        "telugu":    ["మొత్తం", "చెల్లించవలసిన"],
+        "kannada":   ["ಒಟ್ಟು", "ಒಟ್ಟು ಮೊತ್ತ"],
+        "malayalam": ["ആകെ", "മൊത്തം"],
+        "bengali":   ["মোট", "সর্বমোট", "প্রদেয়"],
+        "gujarati":  ["કુલ", "કુલ રકમ"],
+        "english":   ["total", "grand total", "total amount", "net payable",
+                      "bill amount", "amount payable", "you pay"],
     },
     "subtotal": {
-        "tamil": ["உட்கூட்டு", "தொகை"],
-        "english": ["subtotal", "sub total", "sub-total", "net amount",
-                     "taxable value", "taxable"],
+        "tamil":     ["உட்கூட்டு", "தொகை"],
+        "hindi":     ["उप योग", "उप कुल", "कर योग्य"],
+        "telugu":    ["ఉప మొత్తం", "పన్ను విలువ"],
+        "kannada":   ["ಉಪ ಮೊತ್ತ", "ತೆರಿಗೆ ಮೌಲ್ಯ"],
+        "malayalam": ["ഉപ ആകെ", "നികുതി മൂല്യം"],
+        "bengali":   ["উপমোট", "করযোগ্য"],
+        "gujarati":  ["ઉપ કુલ", "કરપાત્ર"],
+        "english":   ["subtotal", "sub total", "sub-total", "net amount",
+                      "taxable value", "taxable"],
     },
     "gst": {
-        "tamil": ["வரி", "மத்திய வரி", "மாநில வரி"],
-        "english": ["cgst", "sgst", "igst", "gst", "tax", "central tax",
-                     "state tax"],
+        "tamil":     ["வரி", "மத்திய வரி", "மாநில வரி"],
+        "hindi":     ["कर", "केंद्रीय कर", "राज्य कर", "जीएसटी"],
+        "telugu":    ["పన్ను", "కేంద్ర పన్ను", "రాష్ట్ర పన్ను"],
+        "kannada":   ["ತೆರಿಗೆ", "ಕೇಂದ್ರ ತೆರಿಗೆ", "ರಾಜ್ಯ ತೆರಿಗೆ"],
+        "malayalam": ["നികുതി", "കേന്ദ്ര നികുതി", "സംസ്ഥാന നികുതി"],
+        "bengali":   ["কর", "কেন্দ্রীয় কর", "রাজ্য কর"],
+        "gujarati":  ["કર", "કેન્દ્રીય કર", "રાજ્ય કર"],
+        "english":   ["cgst", "sgst", "igst", "gst", "tax", "central tax",
+                      "state tax"],
     },
     "item_header": {
-        "tamil": ["பொருள்", "விவரம்", "எண்ணிக்கை"],
-        "english": ["item", "description", "particular", "particulars",
-                     "product", "qty", "quantity", "rate", "price",
-                     "amount", "sl", "s.no", "sno", "hsn", "sac"],
+        "tamil":     ["பொருள்", "விவரம்", "எண்ணிக்கை"],
+        "hindi":     ["वस्तु", "विवरण", "मात्रा", "दर", "राशि"],
+        "telugu":    ["వస్తువు", "వివరణ", "పరిమాణం"],
+        "kannada":   ["ವಸ್ತು", "ವಿವರಣೆ", "ಪ್ರಮಾಣ"],
+        "malayalam": ["ഇനം", "വിവരണം", "അളവ്"],
+        "bengali":   ["পণ্য", "বিবরণ", "পরিমাণ"],
+        "gujarati":  ["વસ્તુ", "વિગત", "જથ્થો"],
+        "english":   ["item", "description", "particular", "particulars",
+                      "product", "qty", "quantity", "rate", "price",
+                      "amount", "sl", "s.no", "sno", "hsn", "sac"],
     },
     "date": {
-        "tamil": ["தேதி", "நாள்"],
-        "english": ["date", "dt", "dated"],
+        "tamil":     ["தேதி", "நாள்"],
+        "hindi":     ["तारीख", "दिनांक"],
+        "telugu":    ["తేదీ"],
+        "kannada":   ["ದಿನಾಂಕ"],
+        "malayalam": ["തീയതി"],
+        "bengali":   ["তারিখ"],
+        "gujarati":  ["તારીખ"],
+        "english":   ["date", "dt", "dated"],
     },
     "invoice": {
-        "tamil": ["பில்", "இரசீது"],
-        "english": ["invoice", "bill", "receipt", "voucher", "ref"],
+        "tamil":     ["பில்", "இரசீது"],
+        "hindi":     ["बिल", "चालान", "रसीद"],
+        "telugu":    ["బిల్లు", "రసీదు"],
+        "kannada":   ["ಬಿಲ್", "ರಸೀದಿ"],
+        "malayalam": ["ബിൽ", "രസീത്"],
+        "bengali":   ["বিল", "চালান", "রসিদ"],
+        "gujarati":  ["બિલ", "ચલણ", "રસીદ"],
+        "english":   ["invoice", "bill", "receipt", "voucher", "ref"],
     },
 }
 
 
 def match_keyword(text: str, category: str) -> bool:
-    """Language-agnostic keyword match — checks both Tamil and English."""
+    """Language-agnostic keyword match — checks ALL supported languages."""
     lower = text.lower()
     kw = KEYWORDS.get(category, {})
-    tamil_words = kw.get("tamil", [])
-    english_words = kw.get("english", [])
-    return (any(w in lower for w in english_words) or
-            any(w in text for w in tamil_words))
+    for lang, words in kw.items():
+        if lang == "english":
+            if any(w in lower for w in words):
+                return True
+        else:
+            # Non-Latin scripts: match against original text (case-insensitive N/A)
+            if any(w in text for w in words):
+                return True
+    return False
 
 
 # ---------------------------------------------------------------------------

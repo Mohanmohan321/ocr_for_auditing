@@ -138,8 +138,8 @@ def detect_vendor(rows: list[list[dict]]) -> str | None:
 
         score = 0
 
-        # Tamil text bonus
-        if any("\u0B80" <= c <= "\u0BFF" for c in stripped):
+        # Non-Latin (Indic script) text bonus — vendor names in local scripts
+        if any(ord(c) > 0x0900 for c in stripped):
             score += 3
 
         # Vendor keyword bonus
